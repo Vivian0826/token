@@ -66,6 +66,22 @@ resource "aws_security_group" "newapi" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    description = "LobeChat frontend"
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Infisical (admin IP only - holds all your API keys)"
+    from_port   = 9000
+    to_port     = 9000
+    protocol    = "tcp"
+    cidr_blocks = [var.allowed_ssh_cidr]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -91,7 +107,12 @@ resource "aws_instance" "newapi" {
 
   user_data = templatefile("${path.module}/user_data.sh.tpl", {
     domain_name = var.domain_name
+    public_ip   = aws_eip.newapi.public_ip
   })
+
+  lifecycle {
+    ignore_changes = [ami, user_data]
+  }
 
   tags = {
     Name = "newapi"
@@ -99,10 +120,14 @@ resource "aws_instance" "newapi" {
 }
 
 resource "aws_eip" "newapi" {
-  instance = aws_instance.newapi.id
-  domain   = "vpc"
+  domain = "vpc"
 
   tags = {
     Name = "newapi"
   }
+}
+
+resource "aws_eip_association" "newapi" {
+  instance_id   = aws_instance.newapi.id
+  allocation_id = aws_eip.newapi.id
 }

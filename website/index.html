@@ -1,0 +1,809 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cakrawala Mesin Digital | AI khusus untuk perusahaan</title>
+<meta name="description" content="Cakrawala Mesin Digital builds custom AI tailored to each company.">
+<meta name="theme-color" content="#050810">
+<style>
+  :root {
+    --bg: #050810;
+    --bg2: #0a1020;
+    --ink: #f1f5fb;
+    --muted: #94a3bb;
+    --line: rgba(148,163,187,.16);
+    --glass: rgba(15,23,41,.55);
+    --a: #5eead4;
+    --b: #7c9cff;
+    --c: #c084fc;
+    --grad: linear-gradient(120deg, var(--a), var(--b) 55%, var(--c));
+    --todo-bg: #5b4a00;
+    --todo-ink: #ffe27a;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink); overflow-x: hidden;
+    font: 16px/1.65 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--a); }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 22px; position: relative; }
+  .grad-text { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  /* header */
+  header.site {
+    position: fixed; inset: 0 0 auto 0; z-index: 50;
+    background: rgba(5,8,16,.62); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  header.site .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 66px; flex-wrap: wrap; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .01em; text-decoration: none; color: var(--ink); }
+  .brand svg { width: 28px; height: 28px; }
+  nav { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  nav a { text-decoration: none; color: var(--muted); font-size: 15px; transition: color .2s; }
+  nav a:hover { color: var(--ink); }
+  .lang { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+  .lang button { border: 0; background: transparent; padding: 6px 12px; font: inherit; font-size: 13px; color: var(--muted); cursor: pointer; }
+  .lang button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+
+  /* hero */
+  .hero { position: relative; padding: 168px 0 110px; overflow: hidden; isolation: isolate; }
+  #net { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; opacity: .9; }
+  .hero::before {
+    content: ""; position: absolute; inset: 0; z-index: -2;
+    background:
+      radial-gradient(900px 500px at 78% 8%, rgba(124,156,255,.28), transparent 62%),
+      radial-gradient(700px 460px at 8% 0%, rgba(94,234,212,.2), transparent 62%),
+      radial-gradient(600px 400px at 60% 100%, rgba(192,132,252,.16), transparent 60%);
+  }
+  .hero::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 160px; z-index: -1;
+    background: linear-gradient(to bottom, transparent, var(--bg));
+  }
+  .hero-grid { display: grid; gap: 48px; grid-template-columns: 1.1fr .9fr; align-items: center; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border: 1px solid var(--line);
+    border-radius: 999px; background: var(--glass); font-size: 13px; color: var(--muted); letter-spacing: .04em;
+  }
+  .pill i { width: 8px; height: 8px; border-radius: 50%; background: var(--a); box-shadow: 0 0 0 0 rgba(94,234,212,.7); animation: pulse 2s infinite; }
+  @keyframes pulse { 70% { box-shadow: 0 0 0 10px rgba(94,234,212,0); } 100% { box-shadow: 0 0 0 0 rgba(94,234,212,0); } }
+  h1 { font-size: clamp(38px, 6vw, 70px); line-height: 1.04; margin: 22px 0 22px; letter-spacing: -.03em; }
+  .lead { font-size: 19px; color: var(--muted); max-width: 54ch; margin: 0 0 34px; }
+  .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 26px; border-radius: 12px; text-decoration: none; font-weight: 600; transition: transform .2s, box-shadow .2s; }
+  .btn.primary { background: var(--grad); color: #04121a; box-shadow: 0 10px 40px -10px rgba(94,234,212,.55); }
+  .btn.primary:hover { transform: translateY(-2px); box-shadow: 0 16px 50px -10px rgba(124,156,255,.7); }
+  .btn.ghost { border: 1px solid var(--line); color: var(--ink); background: var(--glass); }
+  .btn.ghost:hover { border-color: rgba(148,163,187,.4); }
+
+  /* chat demo */
+  .demo {
+    border: 1px solid var(--line); border-radius: 20px; background: var(--glass);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 30px 80px -30px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.02) inset;
+    overflow: hidden; animation: float 7s ease-in-out infinite;
+  }
+  @keyframes float { 50% { transform: translateY(-8px); } }
+  .demo-bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+  .demo-bar b { width: 10px; height: 10px; border-radius: 50%; background: #2a3550; display: inline-block; }
+  .demo-bar span { margin-left: auto; }
+  .demo-body { padding: 18px; display: grid; gap: 12px; min-height: 250px; align-content: start; }
+  .msg { max-width: 88%; padding: 11px 14px; border-radius: 14px; font-size: 14.5px; line-height: 1.5; opacity: 0; transform: translateY(8px); transition: opacity .4s, transform .4s; }
+  .msg.show { opacity: 1; transform: none; }
+  .msg.user { justify-self: end; background: rgba(124,156,255,.18); border: 1px solid rgba(124,156,255,.3); }
+  .msg.ai { justify-self: start; background: rgba(94,234,212,.1); border: 1px solid rgba(94,234,212,.25); }
+  .msg.ai small { display: block; color: var(--a); font-size: 12px; margin-bottom: 4px; letter-spacing: .04em; }
+  .caret::after { content: "▍"; color: var(--a); animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .demo-note { padding: 10px 16px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+
+  /* marquee */
+  .marquee { border-block: 1px solid var(--line); overflow: hidden; background: rgba(10,16,32,.6); }
+  .track { display: flex; gap: 14px; width: max-content; padding: 18px 0; animation: scroll 38s linear infinite; }
+  .tag { padding: 8px 18px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: 14px; white-space: nowrap; background: var(--glass); }
+  @keyframes scroll { to { transform: translateX(-50%); } }
+
+  /* sections */
+  section { padding: 104px 0; position: relative; }
+  .kicker { color: var(--a); font-weight: 600; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; }
+  h2 { font-size: clamp(30px, 4vw, 44px); line-height: 1.1; margin: 12px 0 14px; letter-spacing: -.02em; }
+  .sub { color: var(--muted); max-width: 62ch; margin: 0 0 48px; font-size: 18px; }
+
+  .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .card {
+    position: relative; padding: 28px; border-radius: 20px; border: 1px solid var(--line); background: var(--glass);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); overflow: hidden; transition: transform .3s, border-color .3s;
+  }
+  .card::before {
+    content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .3s; pointer-events: none;
+    background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), rgba(124,156,255,.18), transparent 60%);
+  }
+  .card:hover { transform: translateY(-4px); border-color: rgba(124,156,255,.4); }
+  .card:hover::before { opacity: 1; }
+  .icon { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; margin-bottom: 18px; background: linear-gradient(135deg, rgba(94,234,212,.2), rgba(124,156,255,.2)); border: 1px solid var(--line); }
+  .icon svg { width: 24px; height: 24px; stroke: var(--a); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .card h3 { margin: 0 0 8px; font-size: 20px; }
+  .card p { margin: 0; color: var(--muted); }
+
+
+  /* cases */
+  .cases { display: grid; gap: 20px; grid-template-columns: 1fr 1fr; }
+  .case { position: relative; padding: 30px; border-radius: 22px; border: 1px solid var(--line); background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: flex; flex-direction: column; gap: 18px; overflow: hidden; }
+  .case::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(500px 220px at 100% 0%, rgba(124,156,255,.14), transparent 60%); }
+  .chip { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--a); border: 1px solid rgba(94,234,212,.35); background: rgba(94,234,212,.08); }
+  .case h3 { margin: 10px 0 0; font-size: 24px; line-height: 1.2; }
+  .case .sum { margin: 0; color: var(--muted); }
+  .flow { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .flow li { padding: 7px 14px; border: 1px solid var(--line); border-radius: 10px; font-size: 13.5px; background: rgba(10,16,32,.7); }
+  .flow li + li::before { content: "\2192"; margin-right: 8px; color: var(--a); }
+  .mini { border: 1px solid var(--line); border-radius: 16px; background: rgba(5,8,16,.55); padding: 16px; display: grid; gap: 10px; font-size: 14px; }
+  .mini .row { max-width: 92%; padding: 9px 13px; border-radius: 12px; line-height: 1.5; }
+  .mini .u { justify-self: end; background: rgba(124,156,255,.16); border: 1px solid rgba(124,156,255,.28); }
+  .mini .a { justify-self: start; background: rgba(94,234,212,.09); border: 1px solid rgba(94,234,212,.24); }
+  .src { display: inline-block; margin-top: 6px; padding: 2px 9px; border-radius: 999px; font-size: 12px; color: var(--b); border: 1px solid rgba(124,156,255,.35); }
+  .order { justify-self: stretch; max-width: 100%; border: 1px dashed rgba(94,234,212,.5); background: rgba(94,234,212,.06); border-radius: 12px; padding: 12px 14px; display: grid; gap: 4px; }
+  .order b { color: var(--a); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+  .goals h4 { margin: 0 0 8px; font-size: 13px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; font-weight: 600; }
+  .goals ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .goals li { display: flex; gap: 10px; }
+  .goals li::before { content: "\2713"; color: var(--a); font-weight: 700; flex: none; }
+  .ill { font-size: 12px; color: var(--muted); }
+
+
+  /* games */
+  .gamebox { border: 1px solid var(--line); border-radius: 22px; background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 24px; max-width: 560px; margin: 0 auto; }
+  .gtabs { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; margin-bottom: 18px; }
+  .gtabs button { border: 0; background: transparent; color: var(--muted); padding: 8px 20px; font: inherit; font-size: 14px; cursor: pointer; }
+  .gtabs button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+  .gbar { display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: center; justify-content: space-between; margin-bottom: 14px; color: var(--muted); font-size: 14px; }
+  .gbar b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .gbtn { border: 1px solid var(--line); background: rgba(10,16,32,.7); color: var(--ink); padding: 7px 16px; border-radius: 10px; font: inherit; font-size: 14px; cursor: pointer; }
+  .gbtn:hover { border-color: rgba(94,234,212,.5); }
+  .mem { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .mc { aspect-ratio: 1; border: 0; padding: 0; background: none; perspective: 600px; cursor: pointer; }
+  .mc i { display: block; position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .45s; }
+  .mc.up i, .mc.ok i { transform: rotateY(180deg); }
+  .mc span { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 14px; backface-visibility: hidden; -webkit-backface-visibility: hidden; font-weight: 700; letter-spacing: .02em; }
+  .mc .f { background: linear-gradient(135deg, rgba(94,234,212,.18), rgba(124,156,255,.22)); border: 1px solid var(--line); }
+  .mc .f::after { content: ""; width: 26%; aspect-ratio: 1; border-radius: 50%; background: var(--grad); opacity: .85; }
+  .mc .b { transform: rotateY(180deg); background: rgba(10,16,32,.9); border: 1px solid rgba(94,234,212,.4); color: var(--a); font-size: clamp(14px, 3.4vw, 20px); }
+  .mc.ok .b { background: rgba(94,234,212,.14); border-color: var(--a); box-shadow: 0 0 22px -6px rgba(94,234,212,.7); }
+  .gmsg { min-height: 24px; margin-top: 14px; text-align: center; color: var(--a); font-weight: 600; }
+  .snake-wrap { position: relative; max-width: 360px; margin: 0 auto; }
+  #snake { display: block; width: 100%; aspect-ratio: 1; border-radius: 14px; border: 1px solid var(--line); background: #060a14; touch-action: none; }
+  .dpad { display: grid; grid-template-columns: repeat(3, 56px); grid-template-rows: repeat(2, 48px); gap: 6px; justify-content: center; margin-top: 14px; }
+  .dpad button { border: 1px solid var(--line); background: rgba(10,16,32,.7); color: var(--ink); border-radius: 12px; font-size: 18px; cursor: pointer; touch-action: manipulation; }
+  .dpad .up { grid-column: 2; } .dpad .lf { grid-row: 2; grid-column: 1; } .dpad .dn { grid-row: 2; grid-column: 2; } .dpad .rt { grid-row: 2; grid-column: 3; }
+
+  /* compare */
+  .compare { display: grid; gap: 18px; grid-template-columns: 1fr 1fr; }
+  .col { padding: 30px; border-radius: 20px; border: 1px solid var(--line); background: var(--glass); }
+  .col.best { border-color: rgba(94,234,212,.4); background: linear-gradient(160deg, rgba(94,234,212,.09), rgba(124,156,255,.07)); box-shadow: 0 30px 80px -40px rgba(94,234,212,.4); }
+  .col h3 { margin: 0 0 16px; font-size: 20px; }
+  .col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .col li { display: flex; gap: 12px; color: var(--muted); }
+  .col li::before { content: "✕"; color: #7b879b; flex: none; }
+  .col.best li { color: var(--ink); }
+  .col.best li::before { content: "✓"; color: var(--a); font-weight: 700; }
+
+  /* timeline */
+  .steps { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); counter-reset: s; }
+  .step { position: relative; padding: 28px; border: 1px solid var(--line); border-radius: 20px; background: var(--glass); }
+  .step .n { font-size: 54px; font-weight: 800; line-height: 1; margin-bottom: 14px; }
+  .step h3 { margin: 0 0 8px; font-size: 20px; }
+  .step p { margin: 0; color: var(--muted); }
+
+  /* about / contact */
+  .facts { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin: 0; }
+  .facts dt { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+  .facts dd { margin: 4px 0 0; font-weight: 600; font-size: 18px; }
+  .band {
+    padding: 56px 40px; border-radius: 28px; border: 1px solid var(--line); text-align: center;
+    background:
+      radial-gradient(600px 260px at 20% 0%, rgba(94,234,212,.22), transparent 60%),
+      radial-gradient(600px 260px at 90% 100%, rgba(192,132,252,.22), transparent 60%),
+      var(--bg2);
+  }
+  .band h2 { margin-top: 0; }
+  .band .sub { margin-inline: auto; }
+  .band .facts { justify-items: center; text-align: center; max-width: 620px; margin: 30px auto 0; }
+
+  .todo { background: var(--todo-bg); color: var(--todo-ink); padding: 0 6px; border-radius: 4px; }
+  footer { border-top: 1px solid var(--line); padding: 30px 0 46px; color: var(--muted); font-size: 14px; }
+
+  /* reveal */
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal.d1 { transition-delay: .1s; } .reveal.d2 { transition-delay: .2s; } .reveal.d3 { transition-delay: .3s; }
+
+  @media (max-width: 900px) {
+    .cases { grid-template-columns: 1fr; }
+    .hero-grid { grid-template-columns: 1fr; }
+    .compare { grid-template-columns: 1fr; }
+    .hero { padding: 132px 0 80px; }
+    section { padding: 76px 0; }
+  }
+  @media (max-width: 640px) {
+    nav a { display: none; }
+    nav { flex-wrap: nowrap; }
+    header.site .wrap { flex-wrap: nowrap; min-height: 60px; }
+    .brand { font-size: 14px; white-space: nowrap; }
+  }
+  @media (max-width: 560px) { nav { gap: 14px; } .band { padding: 40px 22px; } }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+    .msg { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Cakrawala Mesin Digital">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5eead4"/><stop offset=".55" stop-color="#7c9cff"/><stop offset="1" stop-color="#c084fc"/></linearGradient></defs>
+        <rect width="32" height="32" rx="9" fill="url(#lg)"/>
+        <path d="M6 21c3-9 7-12 10-12s7 3 10 12" fill="none" stroke="#04121a" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="16" cy="20" r="2.6" fill="#04121a"/>
+      </svg>
+      Cakrawala Mesin Digital
+    </a>
+    <nav aria-label="Main">
+      <a href="#what" data-id="Layanan" data-en="What we do">Layanan</a>
+      <a href="#cases" data-id="Contoh" data-en="Examples">Contoh</a>
+      <a href="#why" data-id="Mengapa kustom" data-en="Why custom">Mengapa kustom</a>
+      <a href="#how" data-id="Cara kerja" data-en="How we work">Cara kerja</a>
+      <a href="#gaming" data-id="Game AI" data-en="Game AI">Game AI</a>
+      <a href="#games" data-id="Game" data-en="Games">Game</a>
+      <a href="#contact" data-id="Kontak" data-en="Contact">Kontak</a>
+      <span class="lang" role="group" aria-label="Language">
+        <button type="button" data-set-lang="id" aria-pressed="true">ID</button>
+        <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+      </span>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <canvas id="net" aria-hidden="true"></canvas>
+    <div class="wrap hero-grid">
+      <div>
+        <span class="pill"><i></i><span data-id="Startup AI dari Jakarta" data-en="AI startup from Jakarta">Startup AI dari Jakarta</span></span>
+        <h1><span data-id="AI khusus," data-en="Custom AI,">AI khusus,</span><br><span class="grad-text" data-id="dibangun untuk perusahaan Anda." data-en="built for your company.">dibangun untuk perusahaan Anda.</span></h1>
+        <p class="lead" data-id="Kami merancang dan membangun AI yang disesuaikan dengan data, proses, dan cara kerja perusahaan Anda, bukan solusi generik yang sama untuk semua." data-en="We design and build AI tailored to your company's data, processes and way of working, not a generic tool that is the same for everyone.">Kami merancang dan membangun AI yang disesuaikan dengan data, proses, dan cara kerja perusahaan Anda, bukan solusi generik yang sama untuk semua.</p>
+        <div class="cta">
+          <a class="btn primary" href="#contact"><span data-id="Rancang AI untuk perusahaan Anda" data-en="Design your company's AI">Rancang AI untuk perusahaan Anda</span> &rarr;</a>
+          <a class="btn ghost" href="#what" data-id="Lihat layanan" data-en="See what we do">Lihat layanan</a>
+        </div>
+      </div>
+
+      <div class="demo" aria-label="Example conversation">
+        <div class="demo-bar"><b></b><b></b><b></b><span data-id="Asisten perusahaan Anda" data-en="Your company assistant">Asisten perusahaan Anda</span></div>
+        <div class="demo-body" id="demo"></div>
+        <div class="demo-note" data-id="Contoh ilustrasi" data-en="Illustrative example">Contoh ilustrasi</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="track" id="track"></div>
+  </div>
+
+  <section id="what">
+    <div class="wrap">
+      <div class="reveal"><div class="kicker" data-id="Layanan" data-en="What we do">Layanan</div>
+      <h2 data-id="Apa yang kami bangun" data-en="What we build">Apa yang kami bangun</h2>
+      <p class="sub" data-id="Setiap perusahaan berbeda, jadi setiap AI yang kami bangun juga berbeda." data-en="Every company is different, so every AI we build is different too.">Setiap perusahaan berbeda, jadi setiap AI yang kami bangun juga berbeda.</p></div>
+      <div class="grid">
+        <article class="card reveal d1">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/><path d="M9 11h6M9 14h4"/></svg></div>
+          <h3 data-id="Asisten AI khusus perusahaan" data-en="Company-specific AI assistants">Asisten AI khusus perusahaan</h3>
+          <p data-id="Asisten yang memahami produk, kebijakan, dan dokumen Anda, untuk melayani pelanggan maupun tim internal." data-en="Assistants that understand your products, policies and documents, serving both customers and your internal team.">Asisten yang memahami produk, kebijakan, dan dokumen Anda, untuk melayani pelanggan maupun tim internal.</p>
+        </article>
+        <article class="card reveal d2">
+          <div class="icon"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="12" r="2.5"/><circle cx="6" cy="18" r="2.5"/><path d="M8.5 6.5 15.5 11M8.5 17.5 15.5 13"/></svg></div>
+          <h3 data-id="Otomasi sesuai proses Anda" data-en="Automation fitted to your process">Otomasi sesuai proses Anda</h3>
+          <p data-id="Otomasi yang dirancang mengikuti alur kerja unik tim Anda dan terhubung ke sistem yang sudah Anda pakai." data-en="Automation designed around your team's own workflows and connected to the systems you already use.">Otomasi yang dirancang mengikuti alur kerja unik tim Anda dan terhubung ke sistem yang sudah Anda pakai.</p>
+        </article>
+        <article class="card reveal d3">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 4.5 3.2 7.8 8 9 4.8-1.2 8-4.5 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+          <h3 data-id="Penerapan yang terkontrol" data-en="Controlled deployment">Penerapan yang terkontrol</h3>
+          <p data-id="Kami memilih model AI yang tepat untuk kebutuhan Anda, dengan akses terkontrol dan biaya yang transparan." data-en="We pick the right AI models for your needs, with controlled access and transparent costs.">Kami memilih model AI yang tepat untuk kebutuhan Anda, dengan akses terkontrol dan biaya yang transparan.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="cases">
+    <div class="wrap">
+      <div class="reveal"><div class="kicker" data-id="Contoh penerapan" data-en="Example solutions">Contoh penerapan</div>
+      <h2 data-id="AI yang langsung bekerja di perusahaan Anda" data-en="AI that goes straight to work in your company">AI yang langsung bekerja di perusahaan Anda</h2>
+      <p class="sub" data-id="Dua contoh skenario yang bisa kami bangun, disesuaikan dengan sistem dan aturan perusahaan Anda." data-en="Two example scenarios we can build, tailored to your company's systems and rules.">Dua contoh skenario yang bisa kami bangun, disesuaikan dengan sistem dan aturan perusahaan Anda.</p></div>
+      <div class="cases">
+
+        <article class="case reveal d1">
+          <div>
+            <span class="chip" data-id="Contoh 1" data-en="Example 1">Contoh 1</span>
+            <h3 data-id="AI yang membaca pustaka pengetahuan internal" data-en="AI that reads your internal knowledge base">AI yang membaca pustaka pengetahuan internal</h3>
+          </div>
+          <p class="sum" data-id="Karyawan bertanya dalam bahasa sehari-hari, AI menjawab berdasarkan SOP, kebijakan, dan dokumen resmi perusahaan Anda sendiri, lengkap dengan sumbernya." data-en="Employees ask in plain language and the AI answers from your own SOPs, policies and official documents, with the source cited.">Karyawan bertanya dalam bahasa sehari-hari, AI menjawab berdasarkan SOP, kebijakan, dan dokumen resmi perusahaan Anda sendiri, lengkap dengan sumbernya.</p>
+          <ul class="flow">
+            <li data-id="SOP dan dokumen" data-en="SOPs and documents">SOP dan dokumen</li>
+            <li data-id="AI membaca dan memahami" data-en="AI reads and understands">AI membaca dan memahami</li>
+            <li data-id="Jawaban untuk karyawan" data-en="Answers for staff">Jawaban untuk karyawan</li>
+          </ul>
+          <div class="mini">
+            <div class="row u" data-id="Berapa lama batas pengajuan klaim perjalanan dinas?" data-en="What is the deadline for submitting a business travel claim?">Berapa lama batas pengajuan klaim perjalanan dinas?</div>
+            <div class="row a"><span data-id="Klaim diajukan maksimal 7 hari setelah perjalanan, disertai bukti pengeluaran." data-en="Claims must be submitted within 7 days of the trip, with proof of expenses.">Klaim diajukan maksimal 7 hari setelah perjalanan, disertai bukti pengeluaran.</span><br><span class="src" data-id="Sumber: SOP Keuangan 3.1" data-en="Source: Finance SOP 3.1">Sumber: SOP Keuangan 3.1</span></div>
+            <div class="ill" data-id="Ilustrasi skenario" data-en="Illustrative scenario">Ilustrasi skenario</div>
+          </div>
+          <div class="goals">
+            <h4 data-id="Dirancang untuk" data-en="Designed to">Dirancang untuk</h4>
+            <ul>
+              <li data-id="Memberi jawaban yang konsisten sesuai aturan terbaru" data-en="Give consistent answers that follow your latest rules">Memberi jawaban yang konsisten sesuai aturan terbaru</li>
+              <li data-id="Mengurangi pertanyaan berulang ke tim HR dan keuangan" data-en="Cut repeat questions to HR and finance teams">Mengurangi pertanyaan berulang ke tim HR dan keuangan</li>
+              <li data-id="Selalu menyertakan sumber dokumen agar bisa diperiksa" data-en="Always cite the source document so it can be verified">Selalu menyertakan sumber dokumen agar bisa diperiksa</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="case reveal d2">
+          <div>
+            <span class="chip" data-id="Contoh 2" data-en="Example 2">Contoh 2</span>
+            <h3 data-id="AI yang terhubung ke sistem telepon" data-en="AI connected to your phone system">AI yang terhubung ke sistem telepon</h3>
+          </div>
+          <p class="sum" data-id="Pelanggan menelepon dan menyebutkan pesanannya, AI memahami, memastikan detailnya, lalu membuat pesanan langsung di sistem Anda." data-en="A customer calls and states their order; the AI understands it, confirms the details, then creates the order directly in your system.">Pelanggan menelepon dan menyebutkan pesanannya, AI memahami, memastikan detailnya, lalu membuat pesanan langsung di sistem Anda.</p>
+          <ul class="flow">
+            <li data-id="Panggilan telepon" data-en="Phone call">Panggilan telepon</li>
+            <li data-id="AI memahami pesanan" data-en="AI understands the order">AI memahami pesanan</li>
+            <li data-id="Pesanan di sistem" data-en="Order in your system">Pesanan di sistem</li>
+          </ul>
+          <div class="mini">
+            <div class="row u" data-id="Saya mau pesan dua puluh dus Produk A, dikirim hari Kamis." data-en="I'd like to order twenty cartons of Product A, delivered on Thursday.">Saya mau pesan dua puluh dus Produk A, dikirim hari Kamis.</div>
+            <div class="row a" data-id="Baik, 20 dus Produk A dikirim hari Kamis. Apakah sudah benar?" data-en="Sure, 20 cartons of Product A delivered Thursday. Is that correct?">Baik, 20 dus Produk A dikirim hari Kamis. Apakah sudah benar?</div>
+            <div class="order">
+              <b data-id="Pesanan dibuat otomatis" data-en="Order created automatically">Pesanan dibuat otomatis</b>
+              <span data-id="20 dus Produk A, kirim Kamis" data-en="20 cartons Product A, deliver Thursday">20 dus Produk A, kirim Kamis</span>
+            </div>
+            <div class="ill" data-id="Ilustrasi skenario" data-en="Illustrative scenario">Ilustrasi skenario</div>
+          </div>
+          <div class="goals">
+            <h4 data-id="Dirancang untuk" data-en="Designed to">Dirancang untuk</h4>
+            <ul>
+              <li data-id="Memasukkan pesanan ke sistem tanpa input manual" data-en="Enter orders into your system without manual typing">Memasukkan pesanan ke sistem tanpa input manual</li>
+              <li data-id="Melayani panggilan di luar jam kerja" data-en="Handle calls outside working hours">Melayani panggilan di luar jam kerja</li>
+              <li data-id="Menyerahkan kasus khusus ke staf Anda" data-en="Hand special cases over to your staff">Menyerahkan kasus khusus ke staf Anda</li>
+            </ul>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="why">
+    <div class="wrap">
+      <div class="reveal"><div class="kicker" data-id="Mengapa kustom" data-en="Why custom">Mengapa kustom</div>
+      <h2 data-id="AI generik vs AI yang dibuat untuk Anda" data-en="Generic AI vs AI made for you">AI generik vs AI yang dibuat untuk Anda</h2>
+      <p class="sub" data-id="Alat AI umum bagus untuk semua orang, tetapi tidak mengenal perusahaan Anda." data-en="Off the shelf AI tools are good for everyone, but they do not know your company.">Alat AI umum bagus untuk semua orang, tetapi tidak mengenal perusahaan Anda.</p></div>
+      <div class="compare">
+        <div class="col reveal d1">
+          <h3 data-id="Alat AI generik" data-en="Generic AI tools">Alat AI generik</h3>
+          <ul>
+            <li data-id="Tidak mengenal produk dan kebijakan Anda" data-en="Does not know your products and policies">Tidak mengenal produk dan kebijakan Anda</li>
+            <li data-id="Karyawan memakainya dengan cara masing-masing" data-en="Everyone uses it in their own way">Karyawan memakainya dengan cara masing-masing</li>
+            <li data-id="Sulit dihubungkan ke sistem internal" data-en="Hard to connect to internal systems">Sulit dihubungkan ke sistem internal</li>
+          </ul>
+        </div>
+        <div class="col best reveal d2">
+          <h3 data-id="AI kustom dari Cakrawala" data-en="Custom AI from Cakrawala">AI kustom dari Cakrawala</h3>
+          <ul>
+            <li data-id="Memahami data, istilah, dan proses perusahaan Anda" data-en="Understands your data, terminology and processes">Memahami data, istilah, dan proses perusahaan Anda</li>
+            <li data-id="Dirancang mengikuti alur kerja tim Anda" data-en="Designed around your team's workflow">Dirancang mengikuti alur kerja tim Anda</li>
+            <li data-id="Terhubung ke sistem yang sudah Anda pakai" data-en="Connected to the systems you already use">Terhubung ke sistem yang sudah Anda pakai</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="reveal"><div class="kicker" data-id="Cara kerja" data-en="How we work">Cara kerja</div>
+      <h2 data-id="Dari ide sampai berjalan" data-en="From idea to running">Dari ide sampai berjalan</h2>
+      <p class="sub" data-id="Proses singkat dan transparan." data-en="A short, transparent process.">Proses singkat dan transparan.</p></div>
+      <div class="steps">
+        <article class="step reveal d1"><div class="n grad-text">01</div>
+          <h3 data-id="Pahami bisnis Anda" data-en="Understand your business">Pahami bisnis Anda</h3>
+          <p data-id="Kami mempelajari proses, masalah, dan data yang Anda miliki." data-en="We study your processes, problems and the data you already have.">Kami mempelajari proses, masalah, dan data yang Anda miliki.</p></article>
+        <article class="step reveal d2"><div class="n grad-text">02</div>
+          <h3 data-id="Bangun AI khusus" data-en="Build your custom AI">Bangun AI khusus</h3>
+          <p data-id="AI yang disesuaikan dengan perusahaan Anda, diuji bersama tim Anda sejak awal." data-en="An AI tailored to your company, tested with your team from the start.">AI yang disesuaikan dengan perusahaan Anda, diuji bersama tim Anda sejak awal.</p></article>
+        <article class="step reveal d3"><div class="n grad-text">03</div>
+          <h3 data-id="Jalankan dan tingkatkan" data-en="Launch and improve">Jalankan dan tingkatkan</h3>
+          <p data-id="Peluncuran, pemantauan, dan perbaikan berkelanjutan." data-en="Rollout, monitoring and continuous improvement.">Peluncuran, pemantauan, dan perbaikan berkelanjutan.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="gaming">
+    <div class="wrap">
+      <div class="reveal"><div class="kicker" data-id="Game AI" data-en="Game AI">Game AI</div>
+      <h2 data-id="AI untuk industri game" data-en="AI for the games industry">AI untuk industri game</h2>
+      <p class="sub" data-id="Kami membantu studio dan penerbit game memakai AI di dalam produk dan di balik layar, dari karakter yang hidup sampai layanan pemain." data-en="We help game studios and publishers use AI inside their products and behind the scenes, from living characters to player services.">Kami membantu studio dan penerbit game memakai AI di dalam produk dan di balik layar, dari karakter yang hidup sampai layanan pemain.</p></div>
+      <div class="grid">
+        <article class="card reveal d1">
+          <div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-4 3.6-6 7-6s6.2 2 7 6"/></svg></div>
+          <h3 data-id="NPC dan karakter cerdas" data-en="Smart NPCs and characters">NPC dan karakter cerdas</h3>
+          <p data-id="Karakter dalam game yang bisa bercakap bebas, tetap sesuai kepribadian dan cerita dunia game Anda." data-en="In-game characters that can hold free conversations while staying true to their personality and your game world's story.">Karakter dalam game yang bisa bercakap bebas, tetap sesuai kepribadian dan cerita dunia game Anda.</p>
+        </article>
+        <article class="card reveal d2">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/><path d="M9 11h6M9 14h4"/></svg></div>
+          <h3 data-id="Dukungan pemain otomatis" data-en="Automated player support">Dukungan pemain otomatis</h3>
+          <p data-id="Asisten yang menjawab pertanyaan pemain setiap saat, dari aturan event sampai masalah akun, dan meneruskan kasus sulit ke tim Anda." data-en="An assistant that answers player questions around the clock, from event rules to account issues, and hands hard cases to your team.">Asisten yang menjawab pertanyaan pemain setiap saat, dari aturan event sampai masalah akun, dan meneruskan kasus sulit ke tim Anda.</p>
+        </article>
+        <article class="card reveal d3">
+          <div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></div>
+          <h3 data-id="Lokalisasi cepat" data-en="Fast localization">Lokalisasi cepat</h3>
+          <p data-id="Menerjemahkan dialog dan teks game ke banyak bahasa sambil menjaga nama, istilah, dan gaya bahasa." data-en="Translate dialogue and game text into many languages while keeping names, terminology and tone consistent.">Menerjemahkan dialog dan teks game ke banyak bahasa sambil menjaga nama, istilah, dan gaya bahasa.</p>
+        </article>
+        <article class="card reveal d1">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4L12 3Z"/><path d="M18 15l.8 2 2 .8-2 .8L18 21l-.8-2.4-2-.8 2-.8.8-2Z"/></svg></div>
+          <h3 data-id="Bantuan pembuatan konten" data-en="Content creation assist">Bantuan pembuatan konten</h3>
+          <p data-id="Membantu tim membuat draf misi, deskripsi item, dan dialog, yang kemudian disunting oleh penulis Anda." data-en="Help your team draft quests, item descriptions and dialogue, which your writers then edit and approve.">Membantu tim membuat draf misi, deskripsi item, dan dialog, yang kemudian disunting oleh penulis Anda.</p>
+        </article>
+        <article class="card reveal d2">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg></div>
+          <h3 data-id="Analisis dan pengujian" data-en="Analysis and testing">Analisis dan pengujian</h3>
+          <p data-id="Membaca log dan ulasan pemain untuk menemukan bug, keluhan, dan pola perilaku lebih cepat." data-en="Read logs and player reviews to surface bugs, complaints and behaviour patterns sooner.">Membaca log dan ulasan pemain untuk menemukan bug, keluhan, dan pola perilaku lebih cepat.</p>
+        </article>
+        <article class="card reveal d3">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 4.5 3.2 7.8 8 9 4.8-1.2 8-4.5 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+          <h3 data-id="Moderasi komunitas" data-en="Community moderation">Moderasi komunitas</h3>
+          <p data-id="Menyaring chat dan komentar yang melanggar aturan komunitas, dengan keputusan akhir tetap di tim Anda." data-en="Filter chat and comments that break community rules, with the final call always left to your team.">Menyaring chat dan komentar yang melanggar aturan komunitas, dengan keputusan akhir tetap di tim Anda.</p>
+        </article>
+      </div>
+      <div class="gamebox reveal" style="margin-top:28px">
+        <div class="mini" style="border:0;background:none;padding:0">
+          <div class="row u" data-id="Penjaga, apakah jembatan itu aman dilalui?" data-en="Guard, is that bridge safe to cross?">Penjaga, apakah jembatan itu aman dilalui?</div>
+          <div class="row a"><span data-id="Hati-hati, Petualang. Jembatan timur runtuh sejak badai semalam. Ambil jalur utara, tapi jangan setelah gelap." data-en="Careful, traveller. The east bridge fell in last night's storm. Take the north road, but not after dark.">Hati-hati, Petualang. Jembatan timur runtuh sejak badai semalam. Ambil jalur utara, tapi jangan setelah gelap.</span><br><span class="src" data-id="NPC: Penjaga Gerbang" data-en="NPC: Gatekeeper">NPC: Penjaga Gerbang</span></div>
+          <div class="ill" data-id="Ilustrasi skenario: karakter yang menjawab sesuai kondisi dunia game" data-en="Illustrative scenario: a character answering based on the state of the game world">Ilustrasi skenario: karakter yang menjawab sesuai kondisi dunia game</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="games">
+    <div class="wrap">
+      <div class="reveal"><div class="kicker" data-id="Zona game" data-en="Game zone">Zona game</div>
+      <h2 data-id="Istirahat sejenak, main game" data-en="Take a break, play a game">Istirahat sejenak, main game</h2>
+      <p class="sub" data-id="Dua game singkat langsung di browser Anda. Tanpa unduhan, tanpa akun." data-en="Two quick games right in your browser. No downloads, no account.">Dua game singkat langsung di browser Anda. Tanpa unduhan, tanpa akun.</p></div>
+      <div class="gamebox reveal">
+        <div class="gtabs" role="group" aria-label="Games">
+          <button type="button" data-game="memory" aria-pressed="true" data-id="Pasangan memori" data-en="Memory match">Pasangan memori</button>
+          <button type="button" data-game="snake" aria-pressed="false">Snake</button>
+        </div>
+
+        <div id="g-memory">
+          <div class="gbar">
+            <span><span data-id="Langkah" data-en="Moves">Langkah</span>: <b id="m-moves">0</b></span>
+            <span><span data-id="Terbaik" data-en="Best">Terbaik</span>: <b id="m-best">-</b></span>
+            <button type="button" class="gbtn" id="m-reset" data-id="Mulai ulang" data-en="Restart">Mulai ulang</button>
+          </div>
+          <div class="mem" id="mem"></div>
+          <div class="gmsg" id="m-msg" aria-live="polite"></div>
+        </div>
+
+        <div id="g-snake" hidden>
+          <div class="gbar">
+            <span><span data-id="Skor" data-en="Score">Skor</span>: <b id="s-score">0</b></span>
+            <span><span data-id="Terbaik" data-en="Best">Terbaik</span>: <b id="s-best">0</b></span>
+            <button type="button" class="gbtn" id="s-start" data-id="Mulai" data-en="Start">Mulai</button>
+          </div>
+          <div class="snake-wrap"><canvas id="snake" width="320" height="320"></canvas></div>
+          <div class="dpad" aria-label="Controls">
+            <button type="button" class="up" data-dir="up" aria-label="Up">&#9650;</button>
+            <button type="button" class="lf" data-dir="left" aria-label="Left">&#9664;</button>
+            <button type="button" class="dn" data-dir="down" aria-label="Down">&#9660;</button>
+            <button type="button" class="rt" data-dir="right" aria-label="Right">&#9654;</button>
+          </div>
+          <div class="gmsg" id="s-msg" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap reveal">
+      <div class="kicker" data-id="Tentang kami" data-en="About us">Tentang kami</div>
+      <h2 data-id="Perusahaan rintisan AI di Jakarta" data-en="An AI startup in Jakarta">Perusahaan rintisan AI di Jakarta</h2>
+      <p class="sub" data-id="PT Cakrawala Mesin Digital mengkhususkan diri membangun AI kustom untuk berbagai perusahaan." data-en="PT Cakrawala Mesin Digital specialises in building custom AI for individual companies.">PT Cakrawala Mesin Digital mengkhususkan diri membangun AI kustom untuk berbagai perusahaan.</p>
+      <dl class="facts">
+        <div><dt data-id="Nama perusahaan" data-en="Company">Nama perusahaan</dt><dd>PT Cakrawala Mesin Digital</dd></div>
+        <div><dt data-id="Lokasi" data-en="Location">Lokasi</dt><dd>Jakarta Utara, Indonesia</dd></div>
+        <div><dt data-id="Didirikan" data-en="Founded">Didirikan</dt><dd>2025</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <div class="band reveal">
+        <div class="kicker" data-id="Kontak" data-en="Contact">Kontak</div>
+        <h2 data-id="Mari rancang AI untuk perusahaan Anda" data-en="Let's design AI for your company">Mari rancang AI untuk perusahaan Anda</h2>
+        <p class="sub" data-id="Ceritakan kebutuhan Anda, kami akan menghubungi Anda kembali." data-en="Tell us what you need and we will get back to you.">Ceritakan kebutuhan Anda, kami akan menghubungi Anda kembali.</p>
+        <dl class="facts">
+          <div><dt>Email</dt><dd><a href="mailto:info@cakrawalamesindigital.com" style="color:inherit;text-decoration:none">info@cakrawalamesindigital.com</a></dd></div>
+          <div><dt data-id="Telepon" data-en="Phone">Telepon</dt><dd><a href="tel:+628138886959" style="color:inherit;text-decoration:none">+62 813 8888 6959</a></dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">&copy; <span id="year"></span> PT Cakrawala Mesin Digital. <span data-id="Hak cipta dilindungi." data-en="All rights reserved.">Hak cipta dilindungi.</span></div>
+</footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var KEY = "lang", lang = "id";
+  var buttons = document.querySelectorAll("[data-set-lang]");
+
+  var DEMO = {
+    id: [
+      ["user", "Berapa lama proses persetujuan cuti di perusahaan kami?"],
+      ["ai", "Menurut Kebijakan SDM bagian 4.2, pengajuan cuti diproses maksimal 2 hari kerja. Mau saya ajukan sekarang?"]
+    ],
+    en: [
+      ["user", "How long does leave approval take at our company?"],
+      ["ai", "According to HR Policy section 4.2, leave requests are processed within 2 working days. Shall I submit one now?"]
+    ]
+  };
+  var TAGS = {
+    id: ["Asisten pengetahuan", "NPC bertenaga AI", "Layanan pelanggan", "Lokalisasi game", "Pencarian dokumen internal", "Otomasi laporan", "Ringkasan rapat", "Integrasi sistem", "Analisis data", "Alur persetujuan"],
+    en: ["Knowledge assistants", "AI powered NPCs", "Customer support", "Game localization", "Internal document search", "Report automation", "Meeting summaries", "System integration", "Data analysis", "Approval workflows"]
+  };
+
+  var demoEl = document.getElementById("demo"), demoRun = 0;
+  function runDemo() {
+    var token = ++demoRun;
+    demoEl.innerHTML = "";
+    var items = DEMO[lang];
+    var i = 0;
+    function next() {
+      if (token !== demoRun || i >= items.length) return;
+      var role = items[i][0], text = items[i][1]; i++;
+      var m = document.createElement("div");
+      m.className = "msg " + role;
+      if (role === "ai") { m.innerHTML = "<small>AI</small><span></span>"; }
+      var span = role === "ai" ? m.querySelector("span") : m;
+      demoEl.appendChild(m);
+      requestAnimationFrame(function () { m.classList.add("show"); });
+      if (reduce || role === "user") { span.textContent = text; setTimeout(next, reduce ? 0 : 900); return; }
+      var k = 0; span.classList.add("caret");
+      (function type() {
+        if (token !== demoRun) return;
+        span.textContent = text.slice(0, ++k);
+        if (k < text.length) setTimeout(type, 22); else { span.classList.remove("caret"); }
+      })();
+    }
+    next();
+  }
+
+  function buildTags() {
+    var t = document.getElementById("track");
+    var list = TAGS[lang];
+    var html = list.concat(list).concat(list).concat(list).map(function (x) { return '<span class="tag">' + x + "</span>"; }).join("");
+    t.innerHTML = html;
+  }
+
+  function apply(l) {
+    lang = l;
+    document.documentElement.lang = l;
+    document.querySelectorAll("[data-" + l + "]").forEach(function (el) { el.textContent = el.getAttribute("data-" + l); });
+    buttons.forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-set-lang") === l)); });
+    try { localStorage.setItem(KEY, l); } catch (e) {}
+    buildTags();
+    runDemo();
+  }
+
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  var initial = saved || ((navigator.language || "id").toLowerCase().indexOf("id") === 0 ? "id" : "en");
+  buttons.forEach(function (b) { b.addEventListener("click", function () { apply(b.getAttribute("data-set-lang")); }); });
+  document.getElementById("year").textContent = new Date().getFullYear();
+  apply(initial);
+
+  /* scroll reveal */
+  var rev = document.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window && !reduce) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+    }, { threshold: .12 });
+    rev.forEach(function (el) { io.observe(el); });
+  } else { rev.forEach(function (el) { el.classList.add("in"); }); }
+
+  /* card glow follows cursor */
+  document.querySelectorAll(".card").forEach(function (c) {
+    c.addEventListener("pointermove", function (e) {
+      var r = c.getBoundingClientRect();
+      c.style.setProperty("--mx", (e.clientX - r.left) + "px");
+      c.style.setProperty("--my", (e.clientY - r.top) + "px");
+    });
+  });
+
+  /* neural network canvas */
+  var cv = document.getElementById("net"), ctx = cv.getContext("2d"), pts = [], W, H, DPR, mouse = { x: -999, y: -999 };
+  function size() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    var r = cv.getBoundingClientRect(); W = r.width; H = r.height;
+    cv.width = W * DPR; cv.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    var n = Math.max(28, Math.min(90, Math.round(W * H / 17000)));
+    pts = [];
+    for (var i = 0; i < n; i++) pts.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35 });
+  }
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    for (var i = 0; i < pts.length; i++) {
+      var p = pts[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+      var dm = Math.hypot(p.x - mouse.x, p.y - mouse.y);
+      if (dm < 140) { p.x += (p.x - mouse.x) / dm * .6; p.y += (p.y - mouse.y) / dm * .6; }
+      for (var j = i + 1; j < pts.length; j++) {
+        var q = pts[j], d = Math.hypot(p.x - q.x, p.y - q.y);
+        if (d < 130) {
+          ctx.strokeStyle = "rgba(124,156,255," + (0.28 * (1 - d / 130)) + ")";
+          ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
+        }
+      }
+      ctx.fillStyle = "rgba(94,234,212,.85)";
+      ctx.beginPath(); ctx.arc(p.x, p.y, 1.8, 0, 6.283); ctx.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+  size();
+  window.addEventListener("resize", size);
+  cv.parentElement.addEventListener("pointermove", function (e) {
+    var r = cv.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+  });
+  cv.parentElement.addEventListener("pointerleave", function () { mouse.x = mouse.y = -999; });
+  if (reduce) { frame = function () {}; ctx.clearRect(0, 0, W, H); } else { requestAnimationFrame(frame); }
+})();
+</script>
+
+<script>
+(function () {
+  function L() { return document.documentElement.lang === "en" ? "en" : "id"; }
+  var T = {
+    win:  { id: "Selesai! Semua pasangan ditemukan.", en: "Done! You found every pair." },
+    over: { id: "Game berakhir. Tekan Mulai untuk main lagi.", en: "Game over. Press Start to play again." },
+    hint: { id: "Tekan Mulai, lalu gunakan panah, WASD, geser, atau tombol di bawah.", en: "Press Start, then use arrows, WASD, swipe, or the buttons below." }
+  };
+  function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) {} return null; }
+
+  /* tabs */
+  var tabs = document.querySelectorAll("[data-game]");
+  var panels = { memory: document.getElementById("g-memory"), snake: document.getElementById("g-snake") };
+  tabs.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var g = b.getAttribute("data-game");
+      tabs.forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+      panels.memory.hidden = g !== "memory";
+      panels.snake.hidden = g !== "snake";
+      if (g !== "snake") stopSnake();
+    });
+  });
+
+  /* memory */
+  var WORDS = ["AI", "LLM", "API", "GPU", "RAG", "SQL", "NLP", "OCR"];
+  var mem = document.getElementById("mem"), mMoves = document.getElementById("m-moves"), mBest = document.getElementById("m-best"), mMsg = document.getElementById("m-msg");
+  var first = null, lock = false, moves = 0, found = 0;
+  function showBest() { var b = store("memBest"); mBest.textContent = b ? b : "-"; }
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function newMemory() {
+    mem.innerHTML = ""; first = null; lock = false; moves = 0; found = 0;
+    mMoves.textContent = "0"; mMsg.textContent = ""; showBest();
+    shuffle(WORDS.concat(WORDS)).forEach(function (w) {
+      var c = document.createElement("button");
+      c.type = "button"; c.className = "mc"; c.setAttribute("data-w", w); c.setAttribute("aria-label", "card");
+      c.innerHTML = '<i><span class="f"></span><span class="b">' + w + "</span></i>";
+      c.addEventListener("click", function () { flip(c); });
+      mem.appendChild(c);
+    });
+  }
+  function flip(c) {
+    if (lock || c.classList.contains("up") || c.classList.contains("ok")) return;
+    c.classList.add("up");
+    if (!first) { first = c; return; }
+    moves++; mMoves.textContent = moves;
+    var a = first, b = c; first = null;
+    if (a.getAttribute("data-w") === b.getAttribute("data-w")) {
+      a.classList.replace("up", "ok"); b.classList.replace("up", "ok"); found++;
+      if (found === WORDS.length) {
+        var best = parseInt(store("memBest"), 10);
+        if (!best || moves < best) store("memBest", String(moves));
+        showBest(); mMsg.textContent = T.win[L()];
+      }
+    } else {
+      lock = true;
+      setTimeout(function () { a.classList.remove("up"); b.classList.remove("up"); lock = false; }, 750);
+    }
+  }
+  document.getElementById("m-reset").addEventListener("click", newMemory);
+  newMemory();
+
+  /* snake */
+  var cv = document.getElementById("snake"), ctx = cv.getContext("2d");
+  var N = 16, C = 20, snake, dir, nextDir, food, timer = null, score, sScore = document.getElementById("s-score"), sBest = document.getElementById("s-best"), sMsg = document.getElementById("s-msg");
+  sBest.textContent = store("snakeBest") || "0";
+  sMsg.textContent = T.hint[L()];
+  function place() {
+    do { food = { x: Math.floor(Math.random() * N), y: Math.floor(Math.random() * N) }; }
+    while (snake.some(function (s) { return s.x === food.x && s.y === food.y; }));
+  }
+  function draw() {
+    ctx.fillStyle = "#060a14"; ctx.fillRect(0, 0, 320, 320);
+    ctx.strokeStyle = "rgba(124,156,255,.06)"; ctx.lineWidth = 1;
+    for (var i = 1; i < N; i++) { ctx.beginPath(); ctx.moveTo(i * C, 0); ctx.lineTo(i * C, 320); ctx.moveTo(0, i * C); ctx.lineTo(320, i * C); ctx.stroke(); }
+    if (food) { ctx.fillStyle = "#c084fc"; ctx.shadowColor = "#c084fc"; ctx.shadowBlur = 12; ctx.beginPath(); ctx.arc(food.x * C + C / 2, food.y * C + C / 2, C / 2 - 3, 0, 6.283); ctx.fill(); ctx.shadowBlur = 0; }
+    if (snake) snake.forEach(function (s, k) {
+      ctx.fillStyle = k === 0 ? "#5eead4" : "rgba(94,234,212,.72)";
+      ctx.fillRect(s.x * C + 1, s.y * C + 1, C - 2, C - 2);
+    });
+  }
+  function stopSnake() { if (timer) { clearInterval(timer); timer = null; } }
+  function startSnake() {
+    stopSnake();
+    snake = [{ x: 8, y: 8 }, { x: 7, y: 8 }, { x: 6, y: 8 }]; dir = { x: 1, y: 0 }; nextDir = dir; score = 0; sScore.textContent = "0"; sMsg.textContent = "";
+    place(); draw();
+    timer = setInterval(step, 120);
+  }
+  function step() {
+    dir = nextDir;
+    var h = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+    var hit = h.x < 0 || h.y < 0 || h.x >= N || h.y >= N || snake.some(function (s) { return s.x === h.x && s.y === h.y; });
+    if (hit) {
+      stopSnake();
+      var best = parseInt(store("snakeBest"), 10) || 0;
+      if (score > best) { store("snakeBest", String(score)); sBest.textContent = score; }
+      sMsg.textContent = T.over[L()]; return;
+    }
+    snake.unshift(h);
+    if (h.x === food.x && h.y === food.y) { score++; sScore.textContent = score; place(); } else { snake.pop(); }
+    draw();
+  }
+  function turn(d) {
+    var v = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] }[d];
+    if (!v || !timer) return;
+    if (v[0] === -dir.x && v[1] === -dir.y) return;
+    nextDir = { x: v[0], y: v[1] };
+  }
+  document.getElementById("s-start").addEventListener("click", startSnake);
+  document.querySelectorAll("[data-dir]").forEach(function (b) { b.addEventListener("click", function () { turn(b.getAttribute("data-dir")); }); });
+  document.addEventListener("keydown", function (e) {
+    if (!timer) return;
+    var m = { ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight: "right", w: "up", s: "down", a: "left", d: "right", W: "up", S: "down", A: "left", D: "right" }[e.key];
+    if (m) { e.preventDefault(); turn(m); }
+  });
+  var tx = 0, ty = 0;
+  cv.addEventListener("touchstart", function (e) { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+  cv.addEventListener("touchend", function (e) {
+    var dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < 20) return;
+    turn(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "right" : "left") : (dy > 0 ? "down" : "up"));
+  });
+  draw();
+  document.querySelectorAll("[data-set-lang]").forEach(function (b) { b.addEventListener("click", function () { if (!timer) sMsg.textContent = T.hint[L()]; }); });
+})();
+</script>
+</body>
+</html>

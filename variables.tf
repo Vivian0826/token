@@ -13,7 +13,7 @@ variable "aws_region" {
 variable "instance_type" {
   description = "EC2 instance type"
   type        = string
-  default     = "t3.small"
+  default     = "m7i-flex.large"
 }
 
 variable "root_volume_size_gb" {
