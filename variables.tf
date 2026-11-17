@@ -38,3 +38,9 @@ variable "domain_name" {
   type        = string
   default     = ""
 }
+
+variable "infisical_public" {
+  description = "Open the Infisical port (9000) to the whole internet. Keep false unless needed temporarily."
+  type        = bool
+  default     = false
+}

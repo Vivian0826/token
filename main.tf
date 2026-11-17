@@ -75,11 +75,11 @@ resource "aws_security_group" "newapi" {
   }
 
   ingress {
-    description = "Infisical (admin IP only - holds all your API keys)"
+    description = "Infisical (admin IP only unless infisical_public is true)"
     from_port   = 9000
     to_port     = 9000
     protocol    = "tcp"
-    cidr_blocks = [var.allowed_ssh_cidr]
+    cidr_blocks = var.infisical_public ? ["0.0.0.0/0"] : [var.allowed_ssh_cidr]
   }
 
   egress {
